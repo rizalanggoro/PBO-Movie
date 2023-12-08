@@ -12,11 +12,12 @@ public class Main extends JFrame {
   public Main() {
     setTitle("Coba GUI");
     setSize(800, 600);
+    setMinimumSize(new Dimension(800, 600));
     setResizable(true);
     setLayout(new BorderLayout());
 
-    drawNavbar();
     drawContent();
+    drawNavbar();
 
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     setVisible(true);
@@ -26,6 +27,11 @@ public class Main extends JFrame {
     new Main();
   }
 
+  private void navigateSectionToName(String name) {
+    System.out.println("navigate to section: " + name);
+    this.cardLayout.show(this.containerContent, name);
+  }
+
   private void drawNavbar() {
     JPanel navbarContainer = new JPanel();
     navbarContainer.setLayout(new BorderLayout());
@@ -33,7 +39,7 @@ public class Main extends JFrame {
     navbarContainer.setPreferredSize(new Dimension(0, 64));
 
     // title
-    JLabel title = new JLabel("Coba GUI Application");
+    JLabel title = new JLabel("Movie Application");
     title.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 0));
     navbarContainer.add(title, BorderLayout.WEST);
 
@@ -44,14 +50,17 @@ public class Main extends JFrame {
 
     // menu: home
     JButton menuItemHome = new JButton("Home");
+    menuItemHome.addActionListener(e -> navigateSectionToName("home"));
     navbarMenuContainer.add(menuItemHome);
 
     // menu: my ticket
     JButton menuItemMyTicket = new JButton("My Ticket");
+    menuItemMyTicket.addActionListener(e -> navigateSectionToName("myTicket"));
     navbarMenuContainer.add(menuItemMyTicket);
 
     // menu: history
     JButton menuItemHistory = new JButton("History");
+    menuItemHistory.addActionListener(e -> navigateSectionToName("history"));
     navbarMenuContainer.add(menuItemHistory);
 
     navbarMenuContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 32));
@@ -65,6 +74,8 @@ public class Main extends JFrame {
     this.containerContent.setBackground(Color.BLUE);
 
     this.containerContent.add("home", new JScrollPane(sectionHome()));
+    this.containerContent.add("myTicket", sectionMyTicket());
+    this.containerContent.add("history", sectionHistory());
 
     add(this.containerContent, BorderLayout.CENTER);
   }
@@ -134,6 +145,24 @@ public class Main extends JFrame {
 
       section.add(itemContainer);
     }
+    return section;
+  }
+
+  private JPanel sectionMyTicket() {
+    JPanel section = new JPanel();
+
+    JLabel label = new JLabel("Section My Ticket");
+    section.add(label);
+
+    return section;
+  }
+
+  private JPanel sectionHistory() {
+    JPanel section = new JPanel();
+
+    JLabel label = new JLabel("Section History");
+    section.add(label);
+
     return section;
   }
 }
