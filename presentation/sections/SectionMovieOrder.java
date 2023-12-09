@@ -1,6 +1,8 @@
 package presentation.sections;
 
+import core.AppFont;
 import core.Constants;
+import core.Utils;
 import domain.models.Movie;
 import presentation.OnRequestNavigateListener;
 import presentation.SectionParams;
@@ -24,6 +26,7 @@ public class SectionMovieOrder extends JPanel {
   // -> panel right
   JLabel labelDayRight;
   JLabel labelSeatRight;
+  JLabel labelPriceRight;
 
   public SectionMovieOrder(
       OnRequestNavigateListener requestNavigateListener
@@ -78,24 +81,22 @@ public class SectionMovieOrder extends JPanel {
     container.add(this.labelSeatRight);
 
     // total price
-    JLabel labelPrice = new JLabel("Total: Rp 500.000,00");
-    labelPrice.setForeground(Constants.Colors.slate500);
-    labelPrice.setFont(new Font(
-        labelPrice.getFont().getName(), Font.PLAIN, 16
-    ));
-    labelPrice.setBounds(
+    this.labelPriceRight = new JLabel("Total: -");
+    this.labelPriceRight.setForeground(Constants.Colors.slate500);
+    AppFont.setNormal(this.labelPriceRight, 16);
+    this.labelPriceRight.setBounds(
         32,
         this.labelSeatRight.getY() + this.labelSeatRight.getHeight() + 4,
         this.panelRightWidth,
-        labelPrice.getFont().getSize() + 8
+        this.labelPriceRight.getFont().getSize() + 8
     );
-    container.add(labelPrice);
+    container.add(this.labelPriceRight);
 
     // button pay
     JButton buttonPay = new JButton("Bayar");
     buttonPay.setBounds(
         32,
-        labelPrice.getY() + labelPrice.getHeight() + 32,
+        this.labelPriceRight.getY() + this.labelPriceRight.getHeight() + 32,
         this.panelRightWidth - 64,
         32
     );
@@ -218,6 +219,11 @@ public class SectionMovieOrder extends JPanel {
           }
 
           this.labelSeatRight.setText("Jumlah kursi: " + this.arrayListSelectedSeat.size());
+          this.labelPriceRight.setText(
+              "Total: Rp " + Utils.Format.decimal(
+                  movie.getPrice() * this.arrayListSelectedSeat.size()
+              )
+          );
         });
         panelSeats.add(toggleButton);
       }

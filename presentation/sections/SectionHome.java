@@ -1,5 +1,6 @@
 package presentation.sections;
 
+import core.Constants;
 import data.sources.SourceMovie;
 import domain.models.Movie;
 import presentation.OnRequestNavigateListener;
@@ -18,7 +19,7 @@ public class SectionHome extends JPanel {
     this.requestNavigateListener = requestNavigateListener;
 
     setLayout(new BorderLayout());
-    setBackground(new Color(0xff0f172a));
+    setBackground(Constants.Colors.slate900);
 
     double posterWidth = (double) (1280 - 64 - (3 * 8)) / 4;
     double posterHeight = posterWidth / 600 * 900;
@@ -94,7 +95,7 @@ public class SectionHome extends JPanel {
     JScrollPane scrollPane = new JScrollPane(panelMovie);
     scrollPane.setBackground(new Color(0xff0f172a));
     scrollPane.setBorder(null);
-    
+
     this.add(scrollPane);
   }
 }

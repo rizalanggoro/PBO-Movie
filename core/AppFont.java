@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AppFont {
-  public static void setNormal(JLabel label, int size) {
+  public static void setNormal(Component label, int size) {
     label.setFont(new Font(
         label.getFont().getName(), Font.PLAIN, size
     ));
