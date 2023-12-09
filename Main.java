@@ -1,3 +1,5 @@
+import core.AppFont;
+import core.Constants;
 import presentation.SectionParams;
 import presentation.sections.SectionHome;
 import presentation.sections.SectionMovieOrder;
@@ -70,14 +72,12 @@ public class Main extends JFrame {
     );
     panel.setLayout(new BorderLayout());
     panel.setPreferredSize(new Dimension(1280, 64));
-    panel.setBackground(new Color(0xff1e293b));
+    panel.setBackground(Constants.Colors.slate800);
 
     // title
-    JLabel label = new JLabel("<html><h3>Movie Application</h3></html>");
-    label.setForeground(new Color(0xfff8fafc));
-    label.setFont(new Font(
-        label.getFont().getName(), Font.BOLD, 16
-    ));
+    JLabel label = new JLabel("Movie Application");
+    AppFont.setBold(label, 16);
+    label.setForeground(Constants.Colors.slate100);
     label.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 0));
     panel.add(label, BorderLayout.WEST);
 
