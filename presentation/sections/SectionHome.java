@@ -1,7 +1,9 @@
-package presentation;
+package presentation.sections;
 
 import data.sources.SourceMovie;
 import domain.models.Movie;
+import presentation.OnRequestNavigateListener;
+import presentation.SectionParams;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,6 +93,8 @@ public class SectionHome extends JPanel {
 
     JScrollPane scrollPane = new JScrollPane(panelMovie);
     scrollPane.setBackground(new Color(0xff0f172a));
+    scrollPane.setBorder(null);
+    
     this.add(scrollPane);
   }
 }
