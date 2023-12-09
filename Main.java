@@ -1,25 +1,29 @@
-import javax.imageio.ImageIO;
+import presentation.SectionHome;
+import presentation.SectionMovieOrder;
+import presentation.SectionParams;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class Main extends JFrame {
-  private final CardLayout cardLayout = new CardLayout();
-  private final JPanel containerContent = new JPanel();
+  private final JPanel panelContent = new JPanel();
+  private final CardLayout cardLayoutContent = new CardLayout();
+  private final SectionMovieOrder sectionMovieOrder = new SectionMovieOrder((name) -> {
+  });
+  // sections
+  private final SectionHome sectionHome = new SectionHome(this::navigateToName);
 
   public Main() {
-    setTitle("Coba GUI");
-    setSize(800, 600);
-    setMinimumSize(new Dimension(800, 600));
-    setResizable(true);
+    setTitle("Movie Application");
+    setSize(1280, 720);
+    setResizable(false);
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
+    setBackground(new Color(0xff0f172a));
 
     drawContent();
     drawNavbar();
 
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
     setVisible(true);
   }
 
@@ -27,143 +31,59 @@ public class Main extends JFrame {
     new Main();
   }
 
-  private void navigateSectionToName(String name) {
-    System.out.println("navigate to section: " + name);
-    this.cardLayout.show(this.containerContent, name);
-  }
+  private void navigateToName(String name) {
+    if (name.equals(SectionMovieOrder.name)) {
+      System.out.println(SectionParams.selectedMovie.getPosterPath());
+//      this.sectionMovieOrder.draw();
+      this.panelContent.remove(this.sectionMovieOrder);
+      this.panelContent.add(SectionMovieOrder.name, new SectionMovieOrder(this::navigateToName));
+    }
 
-  private void drawNavbar() {
-    JPanel navbarContainer = new JPanel();
-    navbarContainer.setLayout(new BorderLayout());
-    navbarContainer.setBackground(Color.RED);
-    navbarContainer.setPreferredSize(new Dimension(0, 64));
-
-    // title
-    JLabel title = new JLabel("Movie Application");
-    title.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 0));
-    navbarContainer.add(title, BorderLayout.WEST);
-
-    // menu container
-    JPanel navbarMenuContainer = new JPanel();
-    navbarMenuContainer.setBackground(Color.RED);
-    navbarMenuContainer.setLayout(new BoxLayout(navbarMenuContainer, BoxLayout.X_AXIS));
-
-    // menu: home
-    JButton menuItemHome = new JButton("Home");
-    menuItemHome.addActionListener(e -> navigateSectionToName("home"));
-    navbarMenuContainer.add(menuItemHome);
-
-    // menu: my ticket
-    JButton menuItemMyTicket = new JButton("My Ticket");
-    menuItemMyTicket.addActionListener(e -> navigateSectionToName("myTicket"));
-    navbarMenuContainer.add(menuItemMyTicket);
-
-    // menu: history
-    JButton menuItemHistory = new JButton("History");
-    menuItemHistory.addActionListener(e -> navigateSectionToName("history"));
-    navbarMenuContainer.add(menuItemHistory);
-
-    navbarMenuContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 32));
-    navbarContainer.add(navbarMenuContainer, BorderLayout.EAST);
-
-    add(navbarContainer, BorderLayout.NORTH);
+    this.cardLayoutContent.show(this.panelContent, name);
   }
 
   private void drawContent() {
-    this.containerContent.setLayout(cardLayout);
-    this.containerContent.setBackground(Color.BLUE);
+    this.panelContent.setLayout(this.cardLayoutContent);
+    this.panelContent.setBackground(new Color(0xff0f172a));
 
-    this.containerContent.add("home", new JScrollPane(sectionHome()));
-    this.containerContent.add("myTicket", sectionMyTicket());
-    this.containerContent.add("history", sectionHistory());
+    this.panelContent.add(SectionHome.name, this.sectionHome);
+    this.panelContent.add(SectionMovieOrder.name, this.sectionMovieOrder);
 
-    add(this.containerContent, BorderLayout.CENTER);
+    navigateToName(SectionMovieOrder.name);
+
+    this.add(this.panelContent, BorderLayout.CENTER);
   }
 
-  private JPanel sectionHome() {
-    JPanel section = new JPanel();
-    section.setLayout(new GridLayout(-1, 4, 8, 8));
-    section.setPreferredSize(new Dimension(-1, 1000));
-    section.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
+  private void drawNavbar() {
+    JPanel panel = new JPanel();
+    panel.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 32));
+    panel.setLayout(new BorderLayout());
+    panel.setPreferredSize(new Dimension(1280, 64));
+    panel.setBackground(Color.RED);
 
-    for (Movie movie : SourceMovie.list) {
-      JPanel itemContainer = new JPanel(new BorderLayout());
-      itemContainer.setBackground(Color.YELLOW);
-      itemContainer.setPreferredSize(new Dimension(300, 400));
+    // title
+    JLabel label = new JLabel("<html><h3>Movie Application</h3></html>");
+    panel.add(label, BorderLayout.WEST);
 
-      // poster
-      double frameWidth = this.getSize().getWidth();
-      double posterWidth = (frameWidth - 64 - 24) / 4;
-      double posterHeight = posterWidth / 600 * 900;
+    // menu
+    JPanel panelMenu = new JPanel();
+    panelMenu.setOpaque(false);
+    panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.X_AXIS));
 
-      BufferedImage imagePoster = null;
-      try {
-        imagePoster = ImageIO.read(new File(movie.getPosterPath()));
-        Image image = imagePoster.getScaledInstance(
-            (int) posterWidth, (int) posterHeight, Image.SCALE_SMOOTH
-        );
-        JLabel labelPoster = new JLabel(new ImageIcon(image));
-        itemContainer.add(labelPoster, BorderLayout.CENTER);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    // menu: home
+    JButton buttonHome = new JButton("Utama");
+    buttonHome.addActionListener(e -> navigateToName(SectionHome.name));
+    panelMenu.add(buttonHome);
 
-      // details
-      JPanel panelDetails = new JPanel();
-      panelDetails.setBackground(Color.LIGHT_GRAY);
-      panelDetails.setLayout(new GridBagLayout());
+    // menu: my ticket
+    JButton buttonMyTicket = new JButton("Tiket Saya");
+    panelMenu.add(buttonMyTicket);
 
-      // constrains
-      GridBagConstraints constraints = new GridBagConstraints();
-      constraints.fill = GridBagConstraints.BOTH;
+    // menu: history
+    JButton buttonHistory = new JButton("Riwayat");
+    panelMenu.add(buttonHistory);
 
-      // details: title
-      JLabel title = new JLabel("<html><h3>" + movie.getTitle() + "</h3><html>");
-      constraints.gridy = 0;
-      constraints.weightx = 1;
-      panelDetails.add(title, constraints);
-
-      // details: synopsis
-      JLabel synopsis = new JLabel(movie.getSynopsis());
-      constraints.gridy = 1;
-      constraints.weightx = 1;
-      panelDetails.add(synopsis, constraints);
-
-      // details: rating
-      JLabel rating = new JLabel("4.5/5");
-      constraints.gridy = 2;
-      constraints.weightx = 1;
-      panelDetails.add(rating, constraints);
-
-      // details: button order
-      JButton buttonOrder = new JButton("Order");
-      constraints.gridy = 3;
-      constraints.weightx = 1;
-      panelDetails.add(buttonOrder, constraints);
-
-      itemContainer.add(panelDetails, BorderLayout.SOUTH);
-
-      section.add(itemContainer);
-    }
-    return section;
-  }
-
-  private JPanel sectionMyTicket() {
-    JPanel section = new JPanel();
-
-    JLabel label = new JLabel("Section My Ticket");
-    section.add(label);
-
-    return section;
-  }
-
-  private JPanel sectionHistory() {
-    JPanel section = new JPanel();
-
-    JLabel label = new JLabel("Section History");
-    section.add(label);
-
-    return section;
+    panel.add(panelMenu, BorderLayout.EAST);
+    this.add(panel, BorderLayout.NORTH);
   }
 }
-

@@ -1,3 +1,5 @@
+package domain.models;
+
 public class Movie {
   private final String title;
   private final String synopsis;
